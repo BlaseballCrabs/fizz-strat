@@ -7,6 +7,7 @@ use std::thread;
 use std::time::Duration;
 
 pub mod discord;
+pub mod html;
 pub mod stackapps;
 
 pub fn get_excerpts(key: &str) -> Result<impl Iterator<Item = (&'static str, SearchExcerpt)>> {
@@ -35,12 +36,13 @@ pub fn pick_excerpt(key: &str) -> Result<(&'static str, SearchExcerpt)> {
 }
 
 pub fn make_message(site: &str, excerpt: SearchExcerpt) -> Message {
+    let title = excerpt.sanitized_title();
     let description = excerpt.sanitized_excerpt();
     let url = excerpt.question_url(site);
 
     Message {
         embeds: vec![Embed {
-            title: excerpt.title,
+            title,
             description,
             url,
             timestamp: excerpt.creation_date,

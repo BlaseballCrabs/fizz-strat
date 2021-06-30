@@ -1,10 +1,7 @@
+use crate::html::strip_tags;
 use anyhow::Result;
 use chrono::prelude::*;
-use ego_tree::iter::Edge;
-use scraper::{node::Text, Html, Node};
-use selectors::attr::CaseSensitivity::CaseSensitive;
 use serde::Deserialize;
-use std::fmt::Write;
 use std::thread;
 use std::time::Duration;
 
@@ -23,31 +20,12 @@ impl SearchExcerpt {
         format!("https://{}/questions/{}", site, self.question_id)
     }
 
+    pub fn sanitized_title(&self) -> String {
+        strip_tags(&self.title)
+    }
+
     pub fn sanitized_excerpt(&self) -> String {
-        let mut buf = String::new();
-
-        let html = Html::parse_fragment(&self.excerpt);
-        let root = html.tree.root();
-
-        for edge in root.traverse() {
-            match edge {
-                Edge::Open(node) => match node.value() {
-                    Node::Text(Text { text }) => write!(buf, "{}", text).unwrap(),
-                    Node::Element(elem) if elem.has_class("highlight", CaseSensitive) => {
-                        buf += "**";
-                    }
-                    _ => {}
-                },
-                Edge::Close(node) => match node.value() {
-                    Node::Element(elem) if elem.has_class("highlight", CaseSensitive) => {
-                        buf += "**";
-                    }
-                    _ => {}
-                },
-            }
-        }
-
-        buf
+        strip_tags(&self.excerpt)
     }
 }
 
