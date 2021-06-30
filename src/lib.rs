@@ -8,6 +8,7 @@ use std::time::Duration;
 
 pub mod discord;
 pub mod html;
+pub mod logger;
 pub mod stackapps;
 
 pub fn get_excerpts(key: &str) -> Result<impl Iterator<Item = (&'static str, SearchExcerpt)>> {

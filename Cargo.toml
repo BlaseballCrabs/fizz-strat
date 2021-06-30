@@ -12,6 +12,8 @@ attohttpc = { version = "0.17.0", features = ["tls-rustls", "json", "compress"],
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
 ego-tree = "0.6.2"
+fern = "0.6.0"
+libsystemd = "0.2.1"
 log = "0.4.14"
 rand = "0.8.3"
 scraper = "0.12.0"
