@@ -23,14 +23,17 @@ pub fn get_excerpts(key: &str) -> Result<impl Iterator<Item = (&'static str, Sea
     }
 
     macro_rules! iter {
-        ($($site:literal),*) => {
+        ($($site:literal),* $(,)?) => {
             None.into_iter()$(.chain(search_with_site($site, "carbonation", key)?))*
         };
     }
 
     Ok(iter![
         "cooking.stackexchange.com",
-        "chemistry.stackexchange.com"
+        "chemistry.stackexchange.com",
+        "homebrew.stackexchange.com",
+        "physics.stackexchange.com",
+        "lifehacks.stackexchange.com",
     ])
 }
 
