@@ -22,10 +22,16 @@ pub fn get_excerpts(key: &str) -> Result<impl Iterator<Item = (&'static str, Sea
             .map(move |x| (site, x)))
     }
 
-    let cooking = search_with_site("cooking.stackexchange.com", "carbonation", key)?;
-    let chemistry = search_with_site("chemistry.stackexchange.com", "carbonation", key)?;
+    macro_rules! iter {
+        ($($site:literal),*) => {
+            None.into_iter()$(.chain(search_with_site($site, "carbonation", key)?))*
+        };
+    }
 
-    Ok(cooking.into_iter().chain(chemistry))
+    Ok(iter![
+        "cooking.stackexchange.com",
+        "chemistry.stackexchange.com"
+    ])
 }
 
 pub fn pick_excerpt(key: &str) -> Result<(&'static str, SearchExcerpt)> {
