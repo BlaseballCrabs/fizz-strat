@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use chrono::{prelude::*, Duration as CDuration, DurationRound};
 use discord::*;
 use log::*;
 use rand::prelude::*;
@@ -81,8 +82,16 @@ pub fn main_loop(key: &str, webhook: &str) -> ! {
     loop {
         match send_one(key, webhook) {
             Ok(()) => {
-                debug!("sleeping...");
-                thread::sleep(Duration::from_secs(60 * 60));
+                let now = Utc::now();
+                let next_hour = now + CDuration::hours(1);
+                let rounded = next_hour
+                    .duration_trunc(CDuration::hours(1))
+                    .expect("time shouldn't overflow");
+                let difference = rounded - now;
+                if let Ok(duration) = difference.to_std() {
+                    debug!("sleeping for {:?}", duration);
+                    thread::sleep(duration);
+                }
             }
             Err(err) => {
                 error!("error: {}", err);
