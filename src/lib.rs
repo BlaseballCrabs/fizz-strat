@@ -83,7 +83,7 @@ pub fn main_loop(key: &str, webhook: &str) -> ! {
         match send_one(key, webhook) {
             Ok(()) => {
                 let now = Utc::now();
-                let next_hour = now + CDuration::hours(1);
+                let next_hour = now + CDuration::hours(4);
                 let rounded = next_hour
                     .duration_trunc(CDuration::hours(1))
                     .expect("time shouldn't overflow");
