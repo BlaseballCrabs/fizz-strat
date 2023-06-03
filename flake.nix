@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-20.09";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.naersk = {
     url = "github:nmattia/naersk";
@@ -9,17 +9,13 @@
     url = "github:oxalica/rust-overlay";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  inputs.flake-compat = {
-    url = "github:edolstra/flake-compat";
-    flake = false;
-  };
 
   outputs = { nixpkgs, flake-utils, rust-overlay, naersk, self, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ rust-overlay.overlay naersk.overlay ];
+          overlays = [ rust-overlay.overlays.default naersk.overlay ];
         };
         rust = pkgs.rust-bin.beta.latest.default;
         inherit (pkgs.rust-bin.nightly.latest) cargo;
